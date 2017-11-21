@@ -6,4 +6,5 @@
     <string name="expression">Expression</string>
     <string name="zero">0</string>
     <string name="bend">Bend</string>
+    <string name="disconnected">Not connected</string>
 </resources>

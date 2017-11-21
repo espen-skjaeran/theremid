@@ -17,11 +17,46 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/connectionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+
+            <ImageView
+                android:id="@+id/connectionStatusImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+            <TextView
+                android:id="@+id/connectionStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:text="@string/disconnected" />
+
+            <ImageButton
+                android:id="@+id/connectionSettingsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:elevation="0dp"
+                app:srcCompat="@android:drawable/ic_menu_preferences" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/expressionPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="top|fill_horizontal"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_below="@+id/connectionLayout"
             android:orientation="vertical">
 
             <LinearLayout

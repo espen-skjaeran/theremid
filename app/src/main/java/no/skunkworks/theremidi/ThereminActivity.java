@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
@@ -124,6 +125,12 @@ public class ThereminActivity extends AppCompatActivity {
         ((SeekBar)findViewById(R.id.expressionSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Expression"));
         ((SeekBar)findViewById(R.id.pitchSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Pitch"));
 
+        findViewById(R.id.connectionSettingsButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openConnectionSettings();
+            }
+        });
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
@@ -186,6 +193,10 @@ public class ThereminActivity extends AppCompatActivity {
 
     private void onHitButtonPressed() {
         Log.d(TAG, "Hit!");
+    }
+
+    private void openConnectionSettings() {
+
     }
 }
 
