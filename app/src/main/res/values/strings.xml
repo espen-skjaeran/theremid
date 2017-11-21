@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ThereMidi</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="pitchname">Pitch</string>
+    <string name="expression">Expression</string>
+    <string name="zero">0</string>
+    <string name="bend">Bend</string>
+</resources>
