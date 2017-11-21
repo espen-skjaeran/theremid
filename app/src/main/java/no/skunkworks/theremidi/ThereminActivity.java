@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+
+import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -116,6 +119,10 @@ public class ThereminActivity extends AppCompatActivity {
                 onHitButtonPressed();
             }
         });
+
+        ((SeekBar)findViewById(R.id.bendSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Bend"));
+        ((SeekBar)findViewById(R.id.expressionSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Expression"));
+        ((SeekBar)findViewById(R.id.pitchSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Pitch"));
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away

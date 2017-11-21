@@ -45,7 +45,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal"
-                    android:layout_weight="1" />
+                    android:layout_weight="8"
+                    android:max="127"
+                    android:min="-127" />
 
                 <TextView
                     android:id="@+id/bendNameView"
@@ -77,7 +79,10 @@
                     android:id="@+id/pitchSeekBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="8"
+                    android:indeterminate="true"
+                    android:max="127"
+                    android:min="-127" />
 
                 <TextView
                     android:id="@+id/pitchTextView"
@@ -103,13 +108,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    tools:text="@string/zero" />
+                    android:text="@string/zero" />
 
                 <SeekBar
-                    android:id="@+id/seekBar"
+                    android:id="@+id/expressionSeekBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="8"
+                    android:max="127"
+                    android:min="-127" />
 
                 <TextView
                     android:id="@+id/expressionText"
