@@ -1,6 +1,7 @@
 package no.skunkworks.theremidi;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -196,7 +197,8 @@ public class ThereminActivity extends AppCompatActivity {
     }
 
     private void openConnectionSettings() {
-
+        Intent intent = new Intent(this, MidiSettingsActivity.class);
+        startActivity(intent);
     }
 }
 
