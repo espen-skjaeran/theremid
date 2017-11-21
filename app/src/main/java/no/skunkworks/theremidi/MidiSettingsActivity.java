@@ -16,12 +16,13 @@ public class MidiSettingsActivity extends Activity {
 
 
     public MidiSettingsActivity() {
-        this.midiMux = MidiMux.INSTANCE;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.midiMux = MidiMux.getInstance(this.getApplicationContext());
         setContentView(R.layout.activity_midi_settings);
 
         destinationSpinner = findViewById(R.id.destinationsSpinner);
