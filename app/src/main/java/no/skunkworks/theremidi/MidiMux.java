@@ -154,6 +154,7 @@ public class MidiMux extends MidiManager.DeviceCallback
         byte[] encoded = evt.encode((byte) 1); // Confused ports vs channels remoteInputPortNo);
         try {
             remoteInputPort.send(encoded, 0, encoded.length);
+            Log.d(TAG, "Sent " + evt);
         } catch (IOException e) {
             Log.w(TAG, "Trouble sending event: " + e);
         }
@@ -185,9 +186,11 @@ public class MidiMux extends MidiManager.DeviceCallback
     @Override
     public void onDeviceOpened(MidiDevice device) {
         midiDevice = device;
+        if(device == null)
+            return;
         Log.d(TAG, "Opened MIDI device! " + device);
         int portno = 0;
-        for(MidiDeviceInfo.PortInfo port : device.getInfo().getPorts()) {
+        for(MidiDeviceInfo.PortInfo port : midiDevice.getInfo().getPorts()) {
             if(port.getType() == MidiDeviceInfo.PortInfo.TYPE_INPUT) {
                 portno = port.getPortNumber();
             }

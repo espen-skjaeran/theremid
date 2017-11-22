@@ -13,15 +13,13 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import no.skunkworks.theremidi.midi.Note;
 import no.skunkworks.theremidi.midi.NoteOnEvent;
-import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
+import no.skunkworks.theremidi.uiadapters.SeekbarToBendAdapter;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -150,9 +148,12 @@ public class ThereminActivity extends AppCompatActivity
             }
         });
 
-        ((SeekBar)findViewById(R.id.bendSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Bend"));
-        ((SeekBar)findViewById(R.id.expressionSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Expression"));
-        ((SeekBar)findViewById(R.id.pitchSeekBar)).setOnSeekBarChangeListener(new SeekbarAdapter("Pitch"));
+        midiMux = MidiMux.getInstance(getApplicationContext());
+        midiMux.addListener(this);
+
+        ((SeekBar)findViewById(R.id.bendSeekBar)).setOnSeekBarChangeListener(new SeekbarToBendAdapter(midiMux, "Bend"));
+        ((SeekBar)findViewById(R.id.expressionSeekBar)).setOnSeekBarChangeListener(new SeekbarToBendAdapter(midiMux, "Expression"));
+        ((SeekBar)findViewById(R.id.pitchSeekBar)).setOnSeekBarChangeListener(new SeekbarToBendAdapter(midiMux, "Pitch"));
 
         findViewById(R.id.connectionSettingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,8 +167,7 @@ public class ThereminActivity extends AppCompatActivity
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
-        midiMux = MidiMux.getInstance(getApplicationContext());
-        midiMux.addListener(this);
+
     }
 
     @Override

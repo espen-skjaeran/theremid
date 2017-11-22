@@ -21,4 +21,8 @@ public class NoteOnEvent extends MidiEvent {
         buffer[2] = velocity;
         return buffer;
     }
+
+    public String toString() {
+        return "NoteOn - " + note + ", velocity " + velocity;
+    }
 }

@@ -17,4 +17,8 @@ public class AllNotesOff extends MidiEvent {
         buf[2] = 0;
         return buf;
     }
+
+    public String toString() {
+        return "All notes off";
+    }
 }

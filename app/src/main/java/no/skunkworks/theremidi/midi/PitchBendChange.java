@@ -20,9 +20,13 @@ public class PitchBendChange extends MidiEvent {
     public byte[] encode(byte channel) {
         byte[] buffer = new byte[3];
         buffer[0] = (byte)(0xE0 + (channel - 1)); // note on
-        int offsetpitch = 0x2000 + pitch;
+        //Scaling to 14 bit by shifting 8 >> 6
+        int offsetpitch = 0x2000 + (pitch << 6);
         buffer[1] = (byte) (offsetpitch & 0x7F);
         buffer[2] = (byte) ((offsetpitch >> 7) & 0x7F);
         return buffer;
+    }
+    public String toString() {
+        return "Pitchbend, pitch " + pitch;
     }
 }
