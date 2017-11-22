@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import no.skunkworks.theremidi.midi.Note;
+import no.skunkworks.theremidi.midi.NoteOnEvent;
 import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
 
 /**
@@ -49,6 +51,8 @@ public class ThereminActivity extends AppCompatActivity
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private MidiMux midiMux;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -160,6 +164,10 @@ public class ThereminActivity extends AppCompatActivity
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+
+        midiMux = MidiMux.getInstance(getApplicationContext());
+        midiMux.addListener(this);
     }
 
     @Override
@@ -170,6 +178,14 @@ public class ThereminActivity extends AppCompatActivity
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        MidiMux.shutdown();
+
+        super.onDestroy();
     }
 
     private void toggle() {
@@ -218,6 +234,7 @@ public class ThereminActivity extends AppCompatActivity
 
     private void onHitButtonPressed() {
         Log.d(TAG, "Hit!");
+        midiMux.sendEvent(new NoteOnEvent(Note.C1, (byte) 127));
     }
 
     private void openConnectionSettings() {
