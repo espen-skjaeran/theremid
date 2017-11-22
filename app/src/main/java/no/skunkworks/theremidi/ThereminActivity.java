@@ -15,7 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
 
@@ -23,7 +25,8 @@ import no.skunkworks.theremidi.uiadapters.SeekbarAdapter;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class ThereminActivity extends AppCompatActivity {
+public class ThereminActivity extends AppCompatActivity
+                              implements MidiMux.MidiConnectionListener {
 
     private static String TAG = "ThereminActivity";
 
@@ -64,6 +67,9 @@ public class ThereminActivity extends AppCompatActivity {
         }
     };
     private View mControlsView;
+    private TextView connectionStatusTextView;
+    private ImageView connectionStatusImageView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -120,7 +126,8 @@ public class ThereminActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content_controls);
-
+        connectionStatusTextView = findViewById(R.id.connectionStatusTextView);
+        connectionStatusImageView = findViewById(R.id.connectionStatusImageView);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +223,14 @@ public class ThereminActivity extends AppCompatActivity {
     private void openConnectionSettings() {
         Intent intent = new Intent(this, MidiSettingsActivity.class);
         startActivity(intent);
+    }
+
+    public void connected(String name, int port) {
+        connectionStatusTextView.setText(R.string.connectedTo + name);
+        //connectionStatusImageView.setImageResource(android.R.id.disc);
+    }
+    public void disconnected(String name) {
+        connectionStatusTextView.setText(getText(R.string.disconnected));
     }
 }
 

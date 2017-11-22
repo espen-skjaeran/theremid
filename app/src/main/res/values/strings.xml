@@ -7,7 +7,9 @@
     <string name="zero">0</string>
     <string name="bend">Bend</string>
     <string name="disconnected">Not connected</string>
+    <string name="connectedTo">Connected to </string>
     <string name="midi_port">midi port</string>
     <string name="midi_destinations_available">MIDI destinations available:</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
