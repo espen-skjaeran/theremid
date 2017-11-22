@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ThereMidi</string>
+    <string name="app_name">ThereMid</string>
 
     <string name="dummy_button">Dummy Button</string>
     <string name="pitchname">Pitch</string>
