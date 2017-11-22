@@ -46,9 +46,10 @@ public class MidiMux extends MidiManager.DeviceCallback
     private MidiManager midiManager;
     private MidiDevice midiDevice;
     private MidiInputPort remoteInputPort;
-    private int remoteInputPortNo;
+    private int midiChannel;
     private Handler handler;
     private static MidiMux INSTANCE;
+    //TODO: Make List so we preserve order.
     private HashMap<String, MidiDeviceInfo> devices = new HashMap<>();
     private Set<MidiConnectionListener> listeners = new HashSet<>();
 
@@ -61,17 +62,9 @@ public class MidiMux extends MidiManager.DeviceCallback
 
     public static void shutdown() {
         Log.d(TAG, "Shutting down MIDI");
-        
+
         INSTANCE.midiManager.unregisterDeviceCallback(INSTANCE);
-        if(INSTANCE.remoteInputPort != null) try {
-            INSTANCE.sendEvent(new AllNotesOff());
-            INSTANCE.sendEvent(new ResetAllControllers());
-            INSTANCE.remoteInputPort.close();
-            INSTANCE.midiDevice.close();
-        }
-        catch(IOException io) {
-            Log.w(TAG, "Trouble closing remote port: " + io);
-        }
+        INSTANCE.disconnect();
     }
 
     public MidiMux(Context context) {
@@ -79,11 +72,9 @@ public class MidiMux extends MidiManager.DeviceCallback
         midiManager = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
         MidiDeviceInfo[] infos = midiManager.getDevices();
         for(MidiDeviceInfo info : infos) {
-            if(info.getInputPortCount() > 0) {
-                Log.d(TAG, "Got device: "+ info.getProperties());
-                String name = info.getProperties().getString(MidiDeviceInfo.PROPERTY_PRODUCT);
-                devices.put(name, info);
-            }
+            Log.d(TAG, "Got device: "+ info.getProperties());
+            String name = info.getProperties().getString(MidiDeviceInfo.PROPERTY_PRODUCT);
+            devices.put(name, info);
         }
         midiManager.registerDeviceCallback(this, handler);
     }
@@ -96,11 +87,13 @@ public class MidiMux extends MidiManager.DeviceCallback
         listeners.remove(listener);
     }
 
+    public List<MidiDeviceInfo> getAvailableMidiDevices() {
+        return new ArrayList<MidiDeviceInfo> (devices.values());
+    }
+
     public List<String> getAvailableDevices() {
-        devices.clear();
         ArrayList<String> out = new ArrayList<>();
         for(MidiDeviceInfo info : devices.values()) {
-
             if(info.getInputPortCount() > 0) {
                 Log.d(TAG, "Got device: "+ info.getProperties() +
                 " with ports " + Arrays.asList(info.getPorts()));
@@ -123,22 +116,42 @@ public class MidiMux extends MidiManager.DeviceCallback
 
         return remoteInputPort == null ? 0 : remoteInputPort.getPortNumber();
     }
+    private void disconnect() {
+        if(remoteInputPort != null) {
+            sendEvent(new AllNotesOff());
+            sendEvent(new ResetAllControllers());
+            try {
+                this.remoteInputPort.close();
+                this.remoteInputPort = null;
+            } catch (IOException e) {
+               Log.e(TAG, "Failed closing input port: " + e);
+            }
+            if(midiDevice != null) try {
+                midiDevice.close();
+                midiDevice = null;
+            } catch (IOException e) {
+                Log.e(TAG, "Failed closing remote device: " + e);
+            }
+        }
+    }
 
-    public void connectToDevice(String productId, int port) throws MidiConnectionException {
+    public void connectToDevice(String productId, int channel) throws MidiConnectionException {
+        disconnect();
+
         MidiDeviceInfo info = devices.get(productId);
         if(info == null) {
             throw new MidiConnectionException(productId + " is not among available devices!");
         }
-        if(port < 1 || port > 16) {
-            throw new MidiConnectionException("Midi port " + port + " illegal");
+        if(channel < 1 || channel > 16) {
+            throw new MidiConnectionException("Midi channel " + channel + " illegal");
         }
         midiManager.openDevice(info, this, handler);
-        this.remoteInputPortNo = port;
+        this.midiChannel = channel;
     }
 
 
     public void sendEvent(MidiEvent evt) {
-        byte[] encoded = evt.encode((byte) remoteInputPortNo);
+        byte[] encoded = evt.encode((byte) 1); // Confused ports vs channels remoteInputPortNo);
         try {
             remoteInputPort.send(encoded, 0, encoded.length);
         } catch (IOException e) {
@@ -173,7 +186,13 @@ public class MidiMux extends MidiManager.DeviceCallback
     public void onDeviceOpened(MidiDevice device) {
         midiDevice = device;
         Log.d(TAG, "Opened MIDI device! " + device);
-        remoteInputPort =  midiDevice.openInputPort(remoteInputPortNo);
+        int portno = 0;
+        for(MidiDeviceInfo.PortInfo port : device.getInfo().getPorts()) {
+            if(port.getType() == MidiDeviceInfo.PortInfo.TYPE_INPUT) {
+                portno = port.getPortNumber();
+            }
+        }
+        remoteInputPort =  midiDevice.openInputPort(portno);
         if(remoteInputPort != null) {
             Log.i(TAG, "Got input port of device!" + midiDevice.getInfo());
             for (MidiConnectionListener l : listeners) {

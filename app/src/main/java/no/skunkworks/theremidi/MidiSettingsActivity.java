@@ -13,7 +13,7 @@ public class MidiSettingsActivity extends Activity implements MidiMux.MidiConnec
     private static String TAG = "MidiSettingsActivity";
 
     private MidiMux midiMux;
-    private static final String[] MIDI_PORTS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+    private static final String[] MIDI_CHANNELS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
                                                 "11", "12", "13", "14", "15", "16"};
     private Spinner destinationSpinner;
     private Spinner midiPortSpinner;
@@ -46,7 +46,7 @@ public class MidiSettingsActivity extends Activity implements MidiMux.MidiConnec
         midiPortSpinner = findViewById(R.id.midiPortSpinner);
         midiPortAdapter = new ArrayAdapter(getApplicationContext(),
                 android.R.layout.simple_list_item_1,
-                MIDI_PORTS);
+                MIDI_CHANNELS);
         midiPortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         midiPortSpinner.setAdapter(midiPortAdapter);
         if(midiMux.getConnectedPort() > 0) {
